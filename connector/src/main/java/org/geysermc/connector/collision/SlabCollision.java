@@ -30,11 +30,10 @@ import org.geysermc.connector.utils.BoundingBox;
 
 public class SlabCollision extends BlockCollision {
 
-
     public SlabCollision(int x, int y, int z) {
         super();
         boundingBoxes = new BoundingBox[]{
-                new BoundingBox(0.5, 0.25, 0.5, 1, 0.5, 1, true)
+                new BoundingBox(0.5, 0.25, 0.5, 1, 0.5, 1)
         };
         initBoxes(x, y, z);
     }

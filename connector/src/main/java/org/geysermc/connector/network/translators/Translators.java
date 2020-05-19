@@ -36,6 +36,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.network.translators.world.block.BlockTranslator;
 import org.geysermc.connector.network.translators.world.block.entity.*;
+import org.geysermc.connector.network.translators.world.CollisionTranslator;
 import org.geysermc.connector.network.translators.inventory.*;
 import org.geysermc.connector.network.translators.inventory.updater.ContainerInventoryUpdater;
 import org.geysermc.connector.network.translators.inventory.updater.InventoryUpdater;
@@ -64,6 +65,9 @@ public class Translators {
 
     @Getter
     private static ObjectArrayList<RequiresBlockState> requiresBlockStateMap = new ObjectArrayList<>();
+
+    @Getter
+    private static CollisionTranslator collisionTranslator;
 
     private static final CompoundTag EMPTY_TAG = CompoundTagBuilder.builder().buildRootTag();
     public static final byte[] EMPTY_LEVEL_CHUNK_DATA;
@@ -111,7 +115,8 @@ public class Translators {
                 GeyserConnector.getInstance().getLogger().error("Could not instantiate annotated translator " + clazz.getCanonicalName() + ".");
             }
         }
-        
+
+        collisionTranslator = new CollisionTranslator();
         itemTranslator = new ItemTranslator();
         itemTranslator.init();
         BlockTranslator.init();

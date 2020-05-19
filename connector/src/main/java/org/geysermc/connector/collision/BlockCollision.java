@@ -31,19 +31,10 @@ import org.geysermc.connector.utils.BoundingBox;
 public class BlockCollision {
     BoundingBox[] boundingBoxes;
 
-    public BlockCollision() { }
-
     void initBoxes(int x, int y, int z) {
         for (BoundingBox b: boundingBoxes) {
             b.translate(x, y, z);
         }
-    }
-
-    public BlockCollision(int x, int y, int z) {
-        boundingBoxes = new BoundingBox[]{
-                new BoundingBox(0.5, 0.5, 0.5, 1, 1, 1, false)
-        };
-        initBoxes(x, y, z);
     }
 
     public void correctPosition(BoundingBox playerCollision) {

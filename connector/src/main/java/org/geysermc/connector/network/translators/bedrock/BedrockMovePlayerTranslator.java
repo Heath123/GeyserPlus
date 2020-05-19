@@ -44,6 +44,8 @@ import org.geysermc.connector.collision.*;
 import org.geysermc.connector.utils.BoundingBox;
 
 import org.geysermc.connector.network.translators.world.block.BlockTranslator;
+import org.geysermc.connector.network.translators.Translators;
+import org.geysermc.connector.network.translators.world.CollisionTranslator;
 
 @Translator(packet = MovePlayerPacket.class)
 public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPacket> {
@@ -68,6 +70,10 @@ public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPack
         // lose precision and thus, causes players to get stuck when walking near walls
         double javaY = packet.getPosition().getY() - EntityType.PLAYER.getOffset();
         // if (packet.isOnGround()) javaY = Math.ceil(javaY * 2) / 2;
+        if (packet.isOnGround() && javaY != Math.ceil(javaY * 2) / 2) {
+            System.out.println("WARNING!");
+            System.out.println(javaY);
+        }
 
         Vector3d position = Vector3d.from(Double.parseDouble(Float.toString(packet.getPosition().getX())), javaY,
                 Double.parseDouble(Float.toString(packet.getPosition().getZ())));
@@ -82,27 +88,33 @@ public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPack
             return;
         }
 
-        BoundingBox playerCollision = new BoundingBox(position.getX(), position.getY() + 0.9, position.getZ(), 0.6, 1.8, 0.6, false);
+        BoundingBox playerCollision = new BoundingBox(position.getX(), position.getY() + 0.9, position.getZ(), 0.6, 1.8, 0.6);
 
-        BlockCollision blockCollision;
-        System.out.println("*********************************");
+
+        // System.out.println("*********************************");
+
         // Loop through all blocks that could collide with the player
-        for (int x = (int) Math.floor(position.getX() - 0.3); x < (int) Math.floor(position.getX() + 0.3) + 1; x++) {
-            // Y extends 0.5 blocks down because of fence hitboxes
-            for (int y = (int) Math.floor(position.getY() - 0.5); y < (int) Math.floor(position.getY() + 1.8) + 1; y++) {
-                for (int z = (int) Math.floor(position.getZ() - 0.3); z < (int) Math.floor(position.getZ() + 0.3) + 1; z++) {
-                    String blockType = BlockTranslator.getJavaIdBlockMap().inverse().get(
-                            session.getConnector().getWorldManager().getBlockAt(session, x, y, z)
+
+        int minCollisionX = (int) Math.floor(position.getX() - 0.3);
+        int maxCollisionX = (int) Math.floor(position.getX() + 0.3);
+
+        // Y extends 0.5 blocks down because of fence hitboxes
+        int minCollisionY = (int) Math.floor(position.getY() - 0.5);
+        int maxCollisionY = (int) Math.floor(position.getY() + 1.8);
+
+        int minCollisionZ = (int) Math.floor(position.getZ() - 0.3);
+        int maxCollisionZ = (int) Math.floor(position.getZ() + 0.3);
+
+        CollisionTranslator collisionTranslator = Translators.getCollisionTranslator();
+        BlockCollision blockCollision;
+        for (int x = minCollisionX; x < maxCollisionX + 1; x++) {
+            for (int y = minCollisionY; y < maxCollisionY + 1; y++) {
+                for (int z = minCollisionZ; z < maxCollisionZ + 1; z++) {
+                    blockCollision = collisionTranslator.getCollision(
+                            session,
+                            session.getConnector().getWorldManager().getBlockAt(session, x, y, z),
+                            x, y, z
                     );
-
-                    System.out.println(blockType);
-
-                    blockCollision = null;
-                    if (blockType.contains("slab")) {
-                        blockCollision = new SlabCollision(x, y, z);
-                    } else if (blockType.contains("sandstone")) {
-                        blockCollision = new BlockCollision(x, y, z);
-                    }
 
                     if (blockCollision != null) {
                         blockCollision.correctPosition(playerCollision);

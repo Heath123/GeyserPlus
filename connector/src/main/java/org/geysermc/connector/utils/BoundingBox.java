@@ -38,9 +38,9 @@ public class BoundingBox {
     private double sizeY;
     private double sizeZ;
 
-    private boolean snapToTop;
+    // private boolean snapToTop;
 
-    public BoundingBox(double middleX, double middleY, double middleZ, double sizeX, double sizeY, double sizeZ, boolean snapToTop) {
+    public BoundingBox(double middleX, double middleY, double middleZ, double sizeX, double sizeY, double sizeZ) {
         this.middleX = middleX;
         this.middleY = middleY;
         this.middleZ = middleZ;
@@ -49,13 +49,7 @@ public class BoundingBox {
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;
 
-        this.snapToTop = snapToTop;
-    }
-
-    public void printDetails() {
-        System.out.println("middleX: " + middleX + " middleY: " + middleY + " middleZ: " + middleZ);
-        System.out.println("sizeX: " + sizeX + " sizeY: " + sizeY + " sizeZ: " + sizeZ);
-        System.out.println("Snap to top: " + snapToTop);
+        // this.snapToTop = snapToTop;
     }
 
     public void translate(double x, double y, double z) {
