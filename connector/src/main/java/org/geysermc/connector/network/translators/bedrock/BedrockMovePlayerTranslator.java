@@ -40,6 +40,11 @@ import com.nukkitx.protocol.bedrock.packet.MoveEntityAbsolutePacket;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import com.nukkitx.protocol.bedrock.packet.SetEntityDataPacket;
 
+import org.geysermc.connector.collision.*;
+import org.geysermc.connector.utils.BoundingBox;
+
+import org.geysermc.connector.network.translators.world.block.BlockTranslator;
+
 @Translator(packet = MovePlayerPacket.class)
 public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPacket> {
 
@@ -62,12 +67,12 @@ public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPack
         // We need to parse the float as a string since casting a float to a double causes us to
         // lose precision and thus, causes players to get stuck when walking near walls
         double javaY = packet.getPosition().getY() - EntityType.PLAYER.getOffset();
-        if (packet.isOnGround()) javaY = Math.ceil(javaY * 2) / 2;
+        // if (packet.isOnGround()) javaY = Math.ceil(javaY * 2) / 2;
 
         Vector3d position = Vector3d.from(Double.parseDouble(Float.toString(packet.getPosition().getX())), javaY,
                 Double.parseDouble(Float.toString(packet.getPosition().getZ())));
 
-        if(!session.confirmTeleport(position)){
+        if (!session.confirmTeleport(position)){
             return;
         }
 
@@ -77,8 +82,37 @@ public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPack
             return;
         }
 
+        BoundingBox playerCollision = new BoundingBox(position.getX(), position.getY() + 0.9, position.getZ(), 0.6, 1.8, 0.6, false);
+
+        BlockCollision blockCollision;
+        System.out.println("*********************************");
+        // Loop through all blocks that could collide with the player
+        for (int x = (int) Math.floor(position.getX() - 0.3); x < (int) Math.floor(position.getX() + 0.3) + 1; x++) {
+            // Y extends 0.5 blocks down because of fence hitboxes
+            for (int y = (int) Math.floor(position.getY() - 0.5); y < (int) Math.floor(position.getY() + 1.8) + 1; y++) {
+                for (int z = (int) Math.floor(position.getZ() - 0.3); z < (int) Math.floor(position.getZ() + 0.3) + 1; z++) {
+                    String blockType = BlockTranslator.getJavaIdBlockMap().inverse().get(
+                            session.getConnector().getWorldManager().getBlockAt(session, x, y, z)
+                    );
+
+                    System.out.println(blockType);
+
+                    blockCollision = null;
+                    if (blockType.contains("slab")) {
+                        blockCollision = new SlabCollision(x, y, z);
+                    } else if (blockType.contains("sandstone")) {
+                        blockCollision = new BlockCollision(x, y, z);
+                    }
+
+                    if (blockCollision != null) {
+                        blockCollision.correctPosition(playerCollision);
+                    }
+                }
+            }
+        }
+
         ClientPlayerPositionRotationPacket playerPositionRotationPacket = new ClientPlayerPositionRotationPacket(
-                packet.isOnGround(), position.getX(), position.getY(), position.getZ(), packet.getRotation().getY(), packet.getRotation().getX()
+                packet.isOnGround(), playerCollision.getMiddleX(), playerCollision.getMiddleY() - 0.9, playerCollision.getMiddleZ(), packet.getRotation().getY(), packet.getRotation().getX()
         );
 
         // head yaw, pitch, head yaw
