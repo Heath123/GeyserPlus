@@ -10,7 +10,7 @@ A fork of Geyser that improves movement checking, fixing many bugs with antichea
 
 ## Why fork Geyser?
 
-Geyser don't want a system that checks and fixes movement properly, as it takes up a tiny amount of extra CPU. When you disagree about something in an open-soure project, the best thing to do is to fork it, so that's what I decided to do. I hope that one day these changes can be merged back into Geyser.
+Geyser don't want a system that checks and fixes movement properly, as it takes up a tiny amount of extra CPU. When you disagree about something in an open-source project, the best thing to do is to fork it, so that's what I decided to do. I hope that one day these changes can be merged back into Geyser.
 
 ## The rest of this file is the original readme
 
