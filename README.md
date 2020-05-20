@@ -6,7 +6,9 @@
 
 ## What is GeyserPlus?
 
-A fork of Geyser that improves movement checking, fixing many bugs with anticheat and "lag back". It isn't currently ready ready for usage, but it should be soon.
+A fork of Geyser that improves movement checking, fixing many bugs with anticheat and "lag back". It isn't currently ready ready for usage, but it should be soon.<br>
+[GeyserPlus Discord](https://discord.gg/bxskcx)<br>
+[Geyser Discord](http://discord.geysermc.org/)
 
 ## Why fork Geyser?
 
