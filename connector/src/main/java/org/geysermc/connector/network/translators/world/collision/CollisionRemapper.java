@@ -24,21 +24,16 @@
  *
  */
 
-package org.geysermc.connector.collision;
+package org.geysermc.connector.network.translators.world.collision;
 
-import org.geysermc.connector.utils.BoundingBox;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public class StairCollision extends BlockCollision {
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface CollisionRemapper {
 
-    public StairCollision(int x, int y, int z, String direction) {
-        super();
-        if (direction == "west") {
-            boundingBoxes = new BoundingBox[]{
-                    // TODO: Assumes stairs are facing west
-                    new BoundingBox(0.25, 0.5, 0.5, 0.5, 1, 1),
-                    new BoundingBox(0.75, 0.25, 0.5, 0.5, 0.5, 1)
-            };
-        }
-        initBoxes(x, y, z);
-    }
+    String regex();
+
+    // Defaults to matching any value
+    String paramRegex() default ".*";
 }

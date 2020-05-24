@@ -24,32 +24,15 @@
  *
  */
 
-package org.geysermc.connector.network.translators.world;
+package org.geysermc.connector.network.translators.world.collision.translators;
 
-import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
-import org.geysermc.connector.collision.*;
-import org.geysermc.connector.network.session.GeyserSession;
-import org.geysermc.connector.network.translators.world.block.BlockTranslator;
+import org.geysermc.connector.network.translators.world.collision.CollisionRemapper;
+import org.geysermc.connector.utils.BoundingBox;
 
-public class CollisionTranslator {
-    public BlockCollision getCollision(GeyserSession session, BlockState block, int x, int y, int z) {
-        String blockID = BlockTranslator.getJavaIdBlockMap().inverse().get(block);
-
-        if (blockID.contains("_slab")) {
-            if (blockID.contains("type=bottom")) {
-                return new SlabCollision(x, y, z);
-            } else {
-                // No correction is needed for top slabs
-                // TODO: Add collision
-                return null;
-            }
-        } else if (blockID.contains("_stairs")) {
-            if (blockID.contains("facing=west")) {
-                return new StairCollision(x, y, z, "west");
-            }
-        } else if (blockID.contains("sandstone")) {
-            return new SolidCollision(x, y, z);
-        }
-        return null;
+@CollisionRemapper(regex = "^air$")
+public class EmptyCollision extends BlockCollision {
+    public EmptyCollision(int x, int y, int z) {
+        super();
+        boundingBoxes = new BoundingBox[0];
     }
 }

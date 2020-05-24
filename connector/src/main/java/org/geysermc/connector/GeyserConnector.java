@@ -57,7 +57,7 @@ public class GeyserConnector {
     public static final BedrockPacketCodec BEDROCK_PACKET_CODEC = Bedrock_v390.V390_CODEC;
 
     public static final String NAME = "Geyser";
-    public static final String VERSION = "DEV"; // A fallback for running in IDEs
+    public static final String VERSION = "1.0-SNAPSHOT (git-master-5ff6ccf)"; // A fallback for running in IDEs
 
     private final Map<InetSocketAddress, GeyserSession> players = new HashMap<>();
 

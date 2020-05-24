@@ -40,12 +40,11 @@ import com.nukkitx.protocol.bedrock.packet.MoveEntityAbsolutePacket;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import com.nukkitx.protocol.bedrock.packet.SetEntityDataPacket;
 
-import org.geysermc.connector.collision.*;
+import org.geysermc.connector.network.translators.world.collision.translators.*;
 import org.geysermc.connector.utils.BoundingBox;
 
-import org.geysermc.connector.network.translators.world.block.BlockTranslator;
 import org.geysermc.connector.network.translators.Translators;
-import org.geysermc.connector.network.translators.world.CollisionTranslator;
+import org.geysermc.connector.network.translators.world.collision.CollisionTranslator;
 
 @Translator(packet = MovePlayerPacket.class)
 public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPacket> {

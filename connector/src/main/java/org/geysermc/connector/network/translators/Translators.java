@@ -36,7 +36,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.network.translators.world.block.BlockTranslator;
 import org.geysermc.connector.network.translators.world.block.entity.*;
-import org.geysermc.connector.network.translators.world.CollisionTranslator;
+import org.geysermc.connector.network.translators.world.collision.CollisionTranslator;
 import org.geysermc.connector.network.translators.inventory.*;
 import org.geysermc.connector.network.translators.inventory.updater.ContainerInventoryUpdater;
 import org.geysermc.connector.network.translators.inventory.updater.InventoryUpdater;
@@ -117,6 +117,8 @@ public class Translators {
         }
 
         collisionTranslator = new CollisionTranslator();
+        collisionTranslator.init();
+
         itemTranslator = new ItemTranslator();
         itemTranslator.init();
         BlockTranslator.init();
